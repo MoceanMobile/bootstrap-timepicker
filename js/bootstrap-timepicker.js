@@ -29,6 +29,7 @@
     this.template = options.template;
     this.appendWidgetTo = options.appendWidgetTo;
     this.showWidgetOnAddonClick = options.showWidgetOnAddonClick;
+    this.usePaddedHour = options.usePaddedHour;
 
     this._init();
   };
@@ -48,6 +49,7 @@
           'click.timepicker': $.proxy(this.highlightUnit, this),
           'keydown.timepicker': $.proxy(this.elementKeydown, this),
           'blur.timepicker': $.proxy(this.blurElement, this),
+          'change.timepicker': $.proxy(this.changeElement, this),
           'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
         });
       } else {
@@ -56,6 +58,7 @@
             'focus.timepicker': $.proxy(this.showWidget, this),
             'click.timepicker': $.proxy(this.showWidget, this),
             'blur.timepicker': $.proxy(this.blurElement, this),
+            'change.timepicker': $.proxy(this.changeElement, this),
             'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
           });
         } else {
@@ -64,6 +67,7 @@
             'click.timepicker': $.proxy(this.highlightUnit, this),
             'keydown.timepicker': $.proxy(this.elementKeydown, this),
             'blur.timepicker': $.proxy(this.blurElement, this),
+            'change.timepicker': $.proxy(this.changeElement, this),
             'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
           });
         }
@@ -91,6 +95,10 @@
     blurElement: function() {
       this.highlightedUnit = null;
       this.updateFromElementVal();
+    },
+
+    changeElement: function() {
+      this.$element.val(this.getTime());
     },
 
     clear: function() {
@@ -318,12 +326,16 @@
       return template;
     },
 
+    getHour: function() {
+      return (this.usePaddedHour && this.hour < 10 ? '0' : '')+this.hour;
+    },
+
     getTime: function() {
       if (this.hour === '') {
         return '';
       }
 
-      return this.hour + ':' + (this.minute.toString().length === 1 ? '0' + this.minute : this.minute) + (this.showSeconds ? ':' + (this.second.toString().length === 1 ? '0' + this.second : this.second) : '') + (this.showMeridian ? ' ' + this.meridian : '');
+      return this.getHour() + ':' + (this.minute.toString().length === 1 ? '0' + this.minute : this.minute) + (this.showSeconds ? ':' + (this.second.toString().length === 1 ? '0' + this.second : this.second) : '') + (this.showMeridian ? ' ' + this.meridian : '');
     },
 
     hideWidget: function() {
@@ -434,7 +446,7 @@
 
 			if ($element.setSelectionRange) {
 				setTimeout(function() {
-          if (self.hour < 10) {
+          if (self.hour < 10 && !self.usePaddedHour) {
             $element.setSelectionRange(0,1);
           } else {
             $element.setSelectionRange(0,2);
@@ -451,7 +463,7 @@
 
 			if ($element.setSelectionRange) {
 				setTimeout(function() {
-          if (self.hour < 10) {
+          if (self.hour < 10 && !self.usePaddedHour) {
             $element.setSelectionRange(2,4);
           } else {
             $element.setSelectionRange(3,5);
@@ -468,7 +480,7 @@
 
 			if ($element.setSelectionRange) {
 				setTimeout(function() {
-          if (self.hour < 10) {
+          if (self.hour < 10 && !self.usePaddedHour) {
             $element.setSelectionRange(5,7);
           } else {
             $element.setSelectionRange(6,8);
