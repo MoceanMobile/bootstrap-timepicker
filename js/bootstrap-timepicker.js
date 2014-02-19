@@ -49,7 +49,6 @@
           'click.timepicker': $.proxy(this.highlightUnit, this),
           'keydown.timepicker': $.proxy(this.elementKeydown, this),
           'blur.timepicker': $.proxy(this.blurElement, this),
-          'change.timepicker': $.proxy(this.changeElement, this),
           'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
         });
       } else {
@@ -58,7 +57,6 @@
             'focus.timepicker': $.proxy(this.showWidget, this),
             'click.timepicker': $.proxy(this.showWidget, this),
             'blur.timepicker': $.proxy(this.blurElement, this),
-            'change.timepicker': $.proxy(this.changeElement, this),
             'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
           });
         } else {
@@ -67,7 +65,6 @@
             'click.timepicker': $.proxy(this.highlightUnit, this),
             'keydown.timepicker': $.proxy(this.elementKeydown, this),
             'blur.timepicker': $.proxy(this.blurElement, this),
-            'change.timepicker': $.proxy(this.changeElement, this),
             'mousewheel.timepicker DOMMouseScroll.timepicker': $.proxy(this.mousewheel, this)
           });
         }
@@ -95,10 +92,6 @@
     blurElement: function() {
       this.highlightedUnit = null;
       this.updateFromElementVal();
-    },
-
-    changeElement: function() {
-      this.$element.val(this.getTime());
     },
 
     clear: function() {
@@ -498,7 +491,7 @@
 			if ($element.setSelectionRange) {
 				if (this.showSeconds) {
 					setTimeout(function() {
-            if (self.hour < 10) {
+            if (self.hour < 10 && !self.usePaddedHour) {
               $element.setSelectionRange(8,10);
             } else {
               $element.setSelectionRange(9,11);
@@ -506,7 +499,7 @@
 					}, 0);
 				} else {
 					setTimeout(function() {
-            if (self.hour < 10) {
+            if (self.hour < 10 && !self.usePaddedHour) {
               $element.setSelectionRange(5,7);
             } else {
               $element.setSelectionRange(6,8);
